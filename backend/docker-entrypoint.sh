@@ -30,6 +30,13 @@ chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 # Run migrations
 php artisan migrate --force
 
+# Seed the database on first run if no categories exist yet
+CATEGORY_COUNT=$(php artisan tinker --execute='echo App\Models\Category::count();' --no-interaction 2>/dev/null | grep -Eo '[0-9]+' | tail -n1)
+if [ "$CATEGORY_COUNT" = "0" ]; then
+    echo "Database is empty, running seeders..."
+    php artisan db:seed --force
+fi
+
 # Create storage link
 php artisan storage:link
 

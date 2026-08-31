@@ -4,6 +4,7 @@ set -e
 # Run this on the host server as root
 DOMAIN="wahatalteb.net"
 WWW_DOMAIN="www.wahatalteb.net"
+ADMIN_DOMAIN="admin.wahatalteb.net"
 EMAIL="admin@wahatalteb.com"
 
 install_nginx() {
@@ -56,10 +57,13 @@ systemctl enable nginx --now
 systemctl restart nginx
 
 # 5. Obtain SSL certificate (certbot will modify the config to add HTTPS)
-# Only include www if it actually resolves, otherwise certbot fails.
+# Only include www/admin if they actually resolve, otherwise certbot fails.
 CERTBOT_DOMAINS=("-d" "$DOMAIN")
 if getent hosts "$WWW_DOMAIN" >/dev/null 2>&1; then
     CERTBOT_DOMAINS+=("-d" "$WWW_DOMAIN")
+fi
+if getent hosts "$ADMIN_DOMAIN" >/dev/null 2>&1; then
+    CERTBOT_DOMAINS+=("-d" "$ADMIN_DOMAIN")
 fi
 
 certbot --nginx "${CERTBOT_DOMAINS[@]}" --non-interactive --agree-tos -m "$EMAIL" --redirect
@@ -79,4 +83,4 @@ fi
 # 7. Final reload
 systemctl reload nginx
 
-echo "SSL setup complete. https://$DOMAIN should now work."
+echo "SSL setup complete. https://$DOMAIN and https://$ADMIN_DOMAIN should now work."

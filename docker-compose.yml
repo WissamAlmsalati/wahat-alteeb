@@ -25,9 +25,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: wahat-backend
-    # Not exposed to the public internet; frontend proxies /api and /admin internally
-    # ports:
-    #   - "127.0.0.1:8000:80"
+    # Exposed only on localhost so host nginx can proxy the admin subdomain
+    ports:
+      - "127.0.0.1:8000:80"
     volumes:
       - ./backend/storage/app/public:/var/www/html/storage/app/public
     environment:

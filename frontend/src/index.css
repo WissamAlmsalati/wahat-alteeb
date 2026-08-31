@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --primary: #2e8b57;
+  --primary-dark: #237a4a;
+  --text-dark: #1a2b3c;
+  --text-muted: #5a6a7a;
+  --bg-light: #f8f9fa;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Avenir Arabic", "Cairo", "Tajawal", "Segoe UI", Tahoma, Arial, sans-serif;
+  color: var(--text-dark);
+  background: var(--bg-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hide scrollbar for brand strip */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Infinite scroll animation for partners strip */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite !important;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.animate-scroll:hover,
+.animate-scroll:active,
+.animate-scroll:focus {
+  animation-play-state: running !important;
+}

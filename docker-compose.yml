@@ -1,0 +1,67 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: wahat-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wahat_alteeb
+      MYSQL_USER: wahat
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: rootsecret
+    ports:
+      - "3308:3306"
+    volumes:
+      - wahat-mysql-data:/var/lib/mysql
+    networks:
+      - wahat-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wahat-backend
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend/storage/app/public:/var/www/html/storage/app/public
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8000
+      - DB_CONNECTION=mysql
+      - DB_HOST=wahat-db
+      - DB_PORT=3306
+      - DB_DATABASE=wahat_alteeb
+      - DB_USERNAME=wahat
+      - DB_PASSWORD=secret
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - wahat-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=/api
+    container_name: wahat-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - wahat-network
+
+networks:
+  wahat-network:
+    driver: bridge
+
+volumes:
+  wahat-mysql-data:

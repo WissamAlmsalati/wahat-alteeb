@@ -1,0 +1,15 @@
+node_modules
+vendor
+.env
+.env.local
+.env.*.local
+docker-compose.yml
+Dockerfile
+.phpunit.result.cache
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+storage/logs/*
+storage/app/public/*
+bootstrap/cache/*.php

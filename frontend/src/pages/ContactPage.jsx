@@ -5,18 +5,6 @@ import { useLanguage } from '../context/LanguageContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 
-function InfoCard({ icon, title, children }) {
-  return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 md:p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-      <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[#2FAB4B]/10 flex items-center justify-center text-[#2FAB4B]">
-        {icon}
-      </div>
-      <h3 className="font-bold text-[#01526D] mb-2">{title}</h3>
-      <div className="text-sm text-[var(--text-muted)] leading-relaxed">{children}</div>
-    </div>
-  )
-}
-
 export default function ContactPage() {
   const { t, language } = useLanguage()
   const isAr = language === 'ar'
@@ -86,67 +74,6 @@ export default function ContactPage() {
               <h1 className="text-3xl md:text-4xl font-bold text-[#01526D] mb-3">{t('contactUs')}</h1>
               <p className="text-gray-600 max-w-2xl">{t('contactSubtitle')}</p>
             </div>
-          </div>
-        </section>
-
-        {/* Info cards */}
-        <section className="px-5 lg:px-10 pb-12 md:pb-16">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-            <InfoCard
-              title={t('callUs')}
-              icon={
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              }
-            >
-              <p>{t('callUsText')}</p>
-              <div className="mt-2 space-y-1" dir="ltr">
-                <p className="font-medium text-[#01526D]">
-                  <span className="text-gray-500 text-xs block">{t('salesPhone')}</span>
-                  <a href="tel:0942222522" className="hover:text-[#2FAB4B]">0942222522</a>
-                </p>
-                <p className="font-medium text-[#01526D]">
-                  <span className="text-gray-500 text-xs block">{t('managementPhone')}</span>
-                  <a href="tel:0912222522" className="hover:text-[#2FAB4B]">0912222522</a>
-                </p>
-              </div>
-            </InfoCard>
-
-            <InfoCard
-              title={t('emailUs')}
-              icon={
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              }
-            >
-              <p>{t('emailUsText')}</p>
-              <p className="mt-1 font-medium text-[#01526D] break-all">info@wahatalteeb.ly</p>
-            </InfoCard>
-
-            <InfoCard
-              title={t('ourLocation')}
-              icon={
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              }
-            >
-              <p>{t('locationText')}</p>
-            </InfoCard>
-
-            <InfoCard
-              title={t('technicalSupport')}
-              icon={
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              }
-            >
-              <p>{t('supportText')}</p>
-            </InfoCard>
           </div>
         </section>
 

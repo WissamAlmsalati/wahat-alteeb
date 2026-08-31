@@ -101,7 +101,16 @@ export default function ContactPage() {
               }
             >
               <p>{t('callUsText')}</p>
-              <p dir="ltr" className="mt-1 font-medium text-[#01526D]">+218 XX XXX XXXX</p>
+              <div className="mt-2 space-y-1" dir="ltr">
+                <p className="font-medium text-[#01526D]">
+                  <span className="text-gray-500 text-xs block">{t('salesPhone')}</span>
+                  <a href="tel:0942222522" className="hover:text-[#2FAB4B]">0942222522</a>
+                </p>
+                <p className="font-medium text-[#01526D]">
+                  <span className="text-gray-500 text-xs block">{t('managementPhone')}</span>
+                  <a href="tel:0912222522" className="hover:text-[#2FAB4B]">0912222522</a>
+                </p>
+              </div>
             </InfoCard>
 
             <InfoCard
@@ -154,13 +163,23 @@ export default function ContactPage() {
               <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm mb-6">
                 <iframe
                   title={t('ourLocation')}
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=13.14%2C32.86%2C13.24%2C32.92&layer=mapnik&marker=32.8872%2C13.1913"
+                  src="https://maps.google.com/maps?q=32.878384,13.199327&z=15&output=embed"
                   width="100%"
                   height="320"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                 />
+              </div>
+              <div className={`mb-6 ${isAr ? 'text-right' : 'text-left'}`}>
+                <a
+                  href="https://maps.google.com/?q=32.878384,13.199327"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[#2FAB4B] hover:underline"
+                >
+                  {isAr ? 'فتح الموقع في Google Maps' : 'Open location in Google Maps'}
+                </a>
               </div>
 
               <div className={`bg-white rounded-2xl border border-gray-100 p-5 md:p-6 shadow-sm ${isAr ? 'text-right' : 'text-left'}`}>

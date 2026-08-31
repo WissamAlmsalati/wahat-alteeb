@@ -7,13 +7,13 @@ export default function Stats({ className = '' }) {
   const stats = [
     {
       icon: '/assets/stats-experience.svg',
-      value: '10+',
+      value: '30+',
       label: t('yearsExperience'),
       mobileOrder: 'order-1',
     },
     {
       icon: '/assets/stats-hospital.svg',
-      value: '30+',
+      value: '100',
       label: t('healthFacilities'),
       mobileOrder: 'order-2',
     },

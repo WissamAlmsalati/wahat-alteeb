@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { LanguageProvider } from './context/LanguageContext.jsx'
 import Navbar from './components/Navbar.jsx'
@@ -13,6 +13,16 @@ import Footer from './components/Footer.jsx'
 import ProductDetails from './pages/ProductDetails.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [pathname])
+
+  return null
+}
 
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -52,6 +62,7 @@ function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductsPage />} />

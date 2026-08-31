@@ -66,7 +66,7 @@ if getent hosts "$ADMIN_DOMAIN" >/dev/null 2>&1; then
     CERTBOT_DOMAINS+=("-d" "$ADMIN_DOMAIN")
 fi
 
-certbot --nginx "${CERTBOT_DOMAINS[@]}" --non-interactive --agree-tos -m "$EMAIL" --redirect
+certbot --nginx "${CERTBOT_DOMAINS[@]}" --non-interactive --agree-tos -m "$EMAIL" --redirect --expand
 
 # 6. Open HTTPS port if a host firewall is present
 if command -v firewall-cmd >/dev/null 2>&1; then

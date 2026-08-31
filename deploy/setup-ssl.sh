@@ -56,7 +56,13 @@ systemctl enable nginx --now
 systemctl restart nginx
 
 # 5. Obtain SSL certificate (certbot will modify the config to add HTTPS)
-certbot --nginx -d "$DOMAIN" -d "$WWW_DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --redirect
+# Only include www if it actually resolves, otherwise certbot fails.
+CERTBOT_DOMAINS=("-d" "$DOMAIN")
+if getent hosts "$WWW_DOMAIN" >/dev/null 2>&1; then
+    CERTBOT_DOMAINS+=("-d" "$WWW_DOMAIN")
+fi
+
+certbot --nginx "${CERTBOT_DOMAINS[@]}" --non-interactive --agree-tos -m "$EMAIL" --redirect
 
 # 6. Open HTTPS port if a host firewall is present
 if command -v firewall-cmd >/dev/null 2>&1; then

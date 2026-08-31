@@ -67,6 +67,54 @@ function ProductCard({ product, onRequestPrice, isAr }) {
   )
 }
 
+function FiltersContent({ categories, brands, search, setSearch, setPage, selectedCategories, selectedBrands, toggleCategory, toggleBrand, hasFilters, clearFilters, t }) {
+  return (
+    <div className="h-full flex flex-col">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="font-bold text-[#01526D]">{t('filters')}</h3>
+        {hasFilters && (
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="text-sm text-[#2FAB4B] hover:underline"
+          >
+            {t('clearFilters')}
+          </button>
+        )}
+      </div>
+
+      <div className="mb-6">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value)
+            setPage(1)
+          }}
+          placeholder={t('searchProducts')}
+          className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#2FAB4B] focus:border-[#2FAB4B] outline-none text-sm"
+        />
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        <FilterGroup
+          title={t('filterBySpecialty')}
+          options={categories}
+          selected={selectedCategories}
+          onToggle={toggleCategory}
+        />
+
+        <FilterGroup
+          title={t('filterByBrand')}
+          options={brands}
+          selected={selectedBrands}
+          onToggle={toggleBrand}
+        />
+      </div>
+    </div>
+  )
+}
+
 function FilterGroup({ title, options, selected, onToggle }) {
   return (
     <div className="mb-6">
@@ -104,6 +152,7 @@ export default function ProductsPage() {
   const [productsData, setProductsData] = useState({ data: [], current_page: 1, last_page: 1, total: 0, from: 0, to: 0 })
   const [loading, setLoading] = useState(true)
   const [orderProduct, setOrderProduct] = useState(null)
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const [search, setSearch] = useState(searchParams.get('search') || '')
   const [selectedCategories, setSelectedCategories] = useState(searchParams.getAll('categories[]'))
@@ -214,50 +263,82 @@ export default function ProductsPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             {/* Filters sidebar — always on the right on desktop */}
-            <aside className={`order-first lg:col-span-1 bg-gray-50 rounded-2xl p-5 md:p-6 ${isAr ? 'lg:order-1' : 'lg:order-2'}`}>
-              <div className={`flex items-center justify-between mb-5 ${isAr ? 'flex-row-reverse' : ''}`}>
-                <h3 className="font-bold text-[#01526D]">{t('filters')}</h3>
-                {hasFilters && (
-                  <button
-                    type="button"
-                    onClick={clearFilters}
-                    className="text-sm text-[#2FAB4B] hover:underline"
-                  >
-                    {t('clearFilters')}
-                  </button>
-                )}
-              </div>
-
-              <div className="mb-6">
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value)
-                    setPage(1)
-                  }}
-                  placeholder={t('searchProducts')}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#2FAB4B] focus:border-[#2FAB4B] outline-none text-sm"
-                />
-              </div>
-
-              <FilterGroup
-                title={t('filterBySpecialty')}
-                options={categories}
-                selected={selectedCategories}
-                onToggle={toggleCategory}
-              />
-
-              <FilterGroup
-                title={t('filterByBrand')}
-                options={brands}
-                selected={selectedBrands}
-                onToggle={toggleBrand}
+            <aside className={`hidden lg:block order-first lg:col-span-1 bg-gray-50 rounded-2xl p-5 md:p-6 ${isAr ? 'lg:order-1' : 'lg:order-2'}`}>
+              <FiltersContent
+                categories={categories}
+                brands={brands}
+                search={search}
+                setSearch={setSearch}
+                setPage={setPage}
+                selectedCategories={selectedCategories}
+                selectedBrands={selectedBrands}
+                toggleCategory={toggleCategory}
+                toggleBrand={toggleBrand}
+                hasFilters={hasFilters}
+                clearFilters={clearFilters}
+                t={t}
               />
             </aside>
 
             {/* Products grid */}
             <section className={`order-last lg:col-span-3 ${isAr ? 'lg:order-2' : 'lg:order-1'}`}>
+              {/* Mobile filter toggle */}
+              <div className="lg:hidden mb-5">
+                <button
+                  type="button"
+                  onClick={() => setFiltersOpen(true)}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white border border-gray-200 text-[#01526D] font-medium px-5 py-2.5 rounded-xl hover:border-[#2FAB4B] hover:text-[#2FAB4B] transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  {t('filters')}
+                </button>
+              </div>
+
+              {/* Mobile filter drawer */}
+              {filtersOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    onClick={() => setFiltersOpen(false)}
+                  />
+                  <div
+                    className={`fixed top-0 bottom-0 w-[min(20rem,85vw)] max-w-full bg-gray-50 z-50 p-5 shadow-xl lg:hidden ${isAr ? 'right-0' : 'left-0'}`}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-[#01526D]">{t('filters')}</h3>
+                      <button
+                        type="button"
+                        onClick={() => setFiltersOpen(false)}
+                        className="p-2 text-gray-500 hover:text-[#01526D]"
+                        aria-label={t('close')}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="h-[calc(100%-3rem)]">
+                      <FiltersContent
+                        categories={categories}
+                        brands={brands}
+                        search={search}
+                        setSearch={setSearch}
+                        setPage={setPage}
+                        selectedCategories={selectedCategories}
+                        selectedBrands={selectedBrands}
+                        toggleCategory={toggleCategory}
+                        toggleBrand={toggleBrand}
+                        hasFilters={hasFilters}
+                        clearFilters={clearFilters}
+                        t={t}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
               {loading ? (
                 <p className="text-center text-gray-500 py-12">{t('loading')}</p>
               ) : productsData.data.length === 0 ? (
@@ -292,45 +373,47 @@ export default function ProductsPage() {
 
                   {/* Pagination */}
                   {productsData.last_page > 1 && (
-                    <div className={`flex items-center justify-center gap-2 mt-10 ${isAr ? 'flex-row-reverse' : ''}`}>
-                      <button
-                        type="button"
-                        onClick={() => handlePageChange(productsData.current_page - 1)}
-                        disabled={productsData.current_page === 1}
-                        className="w-9 h-9 rounded-full border border-gray-200 bg-white text-[#01526D] flex items-center justify-center hover:border-[#2FAB4B] hover:text-[#2FAB4B] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                        aria-label={t('previous')}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isAr ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'} />
-                        </svg>
-                      </button>
-
-                      {Array.from({ length: productsData.last_page }, (_, i) => i + 1).map((p) => (
+                    <div className="mt-10 overflow-x-auto pb-2">
+                      <div className={`flex items-center justify-center gap-2 min-w-max ${isAr ? 'flex-row-reverse' : ''}`}>
                         <button
-                          key={p}
                           type="button"
-                          onClick={() => handlePageChange(p)}
-                          className={`min-w-[2.25rem] h-9 px-2 rounded-full text-sm font-medium transition-colors ${
-                            p === productsData.current_page
-                              ? 'bg-[#2FAB4B] text-white'
-                              : 'border border-gray-200 bg-white text-[#01526D] hover:border-[#2FAB4B] hover:text-[#2FAB4B]'
-                          }`}
+                          onClick={() => handlePageChange(productsData.current_page - 1)}
+                          disabled={productsData.current_page === 1}
+                          className="w-9 h-9 rounded-full border border-gray-200 bg-white text-[#01526D] flex items-center justify-center hover:border-[#2FAB4B] hover:text-[#2FAB4B] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          aria-label={t('previous')}
                         >
-                          {p}
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isAr ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'} />
+                          </svg>
                         </button>
-                      ))}
 
-                      <button
-                        type="button"
-                        onClick={() => handlePageChange(productsData.current_page + 1)}
-                        disabled={productsData.current_page === productsData.last_page}
-                        className="w-9 h-9 rounded-full border border-gray-200 bg-white text-[#01526D] flex items-center justify-center hover:border-[#2FAB4B] hover:text-[#2FAB4B] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                        aria-label={t('next')}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isAr ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'} />
-                        </svg>
-                      </button>
+                        {Array.from({ length: productsData.last_page }, (_, i) => i + 1).map((p) => (
+                          <button
+                            key={p}
+                            type="button"
+                            onClick={() => handlePageChange(p)}
+                            className={`min-w-[2.25rem] h-9 px-2 rounded-full text-sm font-medium transition-colors ${
+                              p === productsData.current_page
+                                ? 'bg-[#2FAB4B] text-white'
+                                : 'border border-gray-200 bg-white text-[#01526D] hover:border-[#2FAB4B] hover:text-[#2FAB4B]'
+                            }`}
+                          >
+                            {p}
+                          </button>
+                        ))}
+
+                        <button
+                          type="button"
+                          onClick={() => handlePageChange(productsData.current_page + 1)}
+                          disabled={productsData.current_page === productsData.last_page}
+                          className="w-9 h-9 rounded-full border border-gray-200 bg-white text-[#01526D] flex items-center justify-center hover:border-[#2FAB4B] hover:text-[#2FAB4B] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          aria-label={t('next')}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isAr ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'} />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   )}
                 </>
